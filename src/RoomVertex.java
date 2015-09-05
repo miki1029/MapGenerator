@@ -1,14 +1,15 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RoomVertex {
 
-    public final Point ENTRANCE;
     public final Point LEFT_TOP;
     public final Point RIGHT_BOTTOM;
     public final int WIDTH;
     public final int HEIGHT;
+    public final Set<Point> ENTRANCE_SET;
     public final List<CorridorEdge> ADJ_LIST;
 
     public RoomVertex(Point leftTop, MapImageGraph mig) {
@@ -16,8 +17,9 @@ public class RoomVertex {
         this.WIDTH = findWidth(mig);
         this.HEIGHT = findHeight(mig);
         this.RIGHT_BOTTOM = Point.get(LEFT_TOP.X + WIDTH - 1, LEFT_TOP.Y + HEIGHT - 1);
-        this.ENTRANCE = findEntrance(mig);
-        this.ADJ_LIST = new LinkedList<>();
+        this.ENTRANCE_SET = new HashSet<>();
+        findEntrance(mig);
+        this.ADJ_LIST = new ArrayList<>();
     }
 
     private int findWidth(MapImageGraph mig) {
@@ -44,48 +46,41 @@ public class RoomVertex {
         throw new IndexOutOfBoundsException();
     }
 
-    // only 1 entrance
-    private Point findEntrance(MapImageGraph mig) {
+    private void findEntrance(MapImageGraph mig) {
         Point searchLT = Point.get(LEFT_TOP.X - 1, LEFT_TOP.Y - 1);
         Point searchRT = Point.get(RIGHT_BOTTOM.X + 1, LEFT_TOP.Y - 1);
         Point searchLB = Point.get(LEFT_TOP.X - 1, RIGHT_BOTTOM.Y + 1);
         Point searchRB = Point.get(RIGHT_BOTTOM.X + 1, RIGHT_BOTTOM.Y + 1);
 
-        List<Point> entList = new ArrayList<>(4);
-        entList.add(findEntrance(mig, searchLT, searchRT));
-        entList.add(findEntrance(mig, searchLT, searchLB));
-        entList.add(findEntrance(mig, searchRT, searchRB));
-        entList.add(findEntrance(mig, searchLB, searchRB));
-
-        for(Point p: entList) {
-            if(p != null)
-                return p;
-        }
-
-        return null;
+        findEntrance(mig, searchLT, searchRT);
+        findEntrance(mig, searchLT, searchLB);
+        findEntrance(mig, searchRT, searchRB);
+        findEntrance(mig, searchLB, searchRB);
     }
 
-    private Point findEntrance(MapImageGraph mig, Point startPoint, Point endPoint) {
+    private void findEntrance(MapImageGraph mig, Point startPoint, Point endPoint) {
+        // top -> bottom
         if ((startPoint.X == endPoint.X) && (startPoint.Y < endPoint.Y)) {
             int x = startPoint.X;
             for (int y = startPoint.Y; y < endPoint.Y; y++) {
                 Point curPoint = Point.get(x, y);
                 RGB curRGB = mig.getRGB(curPoint);
-                if (curRGB.equals(RGB.BLACK)) {
-                    return curPoint;
+                if (curRGB.equals(RGB.BLACK) && !ENTRANCE_SET.contains(curPoint.up())) {
+                    ENTRANCE_SET.add(curPoint);
                 }
             }
-        } else if ((startPoint.X < endPoint.X) && (startPoint.Y == endPoint.Y)) {
+        }
+        // left -> right
+        else if ((startPoint.X < endPoint.X) && (startPoint.Y == endPoint.Y)) {
             int y = startPoint.Y;
             for (int x = startPoint.X; x < endPoint.X; x++) {
                 Point curPoint = Point.get(x, y);
                 RGB curRGB = mig.getRGB(curPoint);
-                if (curRGB.equals(RGB.BLACK)) {
-                    return curPoint;
+                if (curRGB.equals(RGB.BLACK) && !ENTRANCE_SET.contains(curPoint.left())) {
+                    ENTRANCE_SET.add(curPoint);
                 }
             }
         }
-        return null;
     }
 
     public boolean isInsidePoint(Point p) {

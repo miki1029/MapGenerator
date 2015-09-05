@@ -5,16 +5,16 @@ import java.util.Set;
 
 public class CorridorEdge {
 
-    final Point BASE_POINT;
-    final Set<Point> EDGE_SET = new HashSet<>();
+    public final Point BASE_POINT;
+    public final Set<Point> EDGE_SET = new HashSet<>();
 
-    final RoomVertex PREV;
-    final RoomVertex NEXT;
-    final int WEIGHT;
+    public final RoomVertex PREV;
+    public final RoomVertex NEXT;
+    public final int WEIGHT;
 
-    public CorridorEdge(RoomVertex startVertex, MapImageGraph mig) {
+    public CorridorEdge(RoomVertex startVertex, Point entrancePoint, MapImageGraph mig) {
         PREV = startVertex;
-        BASE_POINT = PREV.ENTRANCE;
+        BASE_POINT = entrancePoint;
         EDGE_SET.add(BASE_POINT);
         NEXT = floodFill(BASE_POINT, mig);
         WEIGHT = EDGE_SET.size();

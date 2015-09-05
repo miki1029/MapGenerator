@@ -54,6 +54,7 @@ public class MapImageGraph {
 
     // scan graph to ROOM_VERTEX_LIST
     private void scanGraph() {
+        // scan vertex
         for (int y = 0; y < HEIGHT; y++) {
             for (int x = 0; x < WIDTH; x++) {
                 Point curPoint = Point.get(x, y);
@@ -84,9 +85,12 @@ public class MapImageGraph {
             }
         }
 
+        // scan edge
         for (RoomVertex vertex : ROOM_VERTEX_LIST) {
-            CorridorEdge newEdge = new CorridorEdge(vertex, this);
-            vertex.ADJ_LIST.add(newEdge);
+            for(Point entrancePoint : vertex.ENTRANCE_SET) {
+                CorridorEdge newEdge = new CorridorEdge(vertex, entrancePoint, this);
+                vertex.ADJ_LIST.add(newEdge);
+            }
         }
     }
 

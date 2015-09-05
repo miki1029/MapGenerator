@@ -7,11 +7,11 @@ public class MapImageGraphTest {
 
     @Before
     public void setUp() throws Exception {
-        mapImageGraph = new MapImageGraph("test3.png");
     }
 
     @Test
-    public void testScanImage() throws Exception {
+    public void testConstruct() throws Exception {
+        mapImageGraph = new MapImageGraph("test.png");
         System.out.println();
     }
 }
