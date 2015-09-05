@@ -34,6 +34,22 @@ public class Point {
         return new Point(x, y);
     }
 
+    public Point left() {
+        return Point.get(X-1, Y);
+    }
+
+    public Point right() {
+        return Point.get(X+1, Y);
+    }
+
+    public Point up() {
+        return Point.get(X, Y-1);
+    }
+
+    public Point down() {
+        return Point.get(X, Y+1);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

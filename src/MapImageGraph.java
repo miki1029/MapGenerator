@@ -83,6 +83,11 @@ public class MapImageGraph {
                 }
             }
         }
+
+        for (RoomVertex vertex : ROOM_VERTEX_LIST) {
+            CorridorEdge newEdge = new CorridorEdge(vertex, this);
+            vertex.ADJ_LIST.add(newEdge);
+        }
     }
 
     // calculate jump size to vertex
@@ -120,6 +125,14 @@ public class MapImageGraph {
             return RGB.WHITE;
         }
         return RGB_MAP.get(p);
+    }
+
+    public RoomVertex findRoomVertex(Point p) {
+        for (RoomVertex vertex : ROOM_VERTEX_LIST) {
+            if (vertex.isInsidePoint(p))
+                return vertex;
+        }
+        throw new NullPointerException();
     }
 
 }

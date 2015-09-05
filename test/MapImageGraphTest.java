@@ -7,7 +7,7 @@ public class MapImageGraphTest {
 
     @Before
     public void setUp() throws Exception {
-        mapImageGraph = new MapImageGraph("test.png");
+        mapImageGraph = new MapImageGraph("test3.png");
     }
 
     @Test
